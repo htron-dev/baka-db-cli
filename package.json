@@ -34,11 +34,13 @@
   "license": "MIT",
   "dependencies": {
     "glob": "^7.1.7",
-    "gluegun": "latest"
+    "gluegun": "latest",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/glob": "^7.1.4",
     "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.172",
     "@types/node": "^12.7.11",
     "jest": "^24.1.0",
     "prettier": "^1.12.1",

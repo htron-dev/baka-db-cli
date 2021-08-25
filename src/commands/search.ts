@@ -1,11 +1,17 @@
-import * as fs from 'fs'
+// import * as fs from 'fs'
 import * as path from 'path'
 import { GluegunToolbox } from 'gluegun'
 
 export default {
   name: 'search',
   alias: ['s'],
-  run: async ({ parameters, print, catalog, config }: GluegunToolbox) => {
+  run: async ({
+    parameters,
+    print,
+    catalog,
+    config,
+    filesystem
+  }: GluegunToolbox) => {
     const name = parameters.first
 
     if (!name) {
@@ -22,8 +28,8 @@ export default {
 
     const results: string[] = []
 
-    files.forEach((file, index) => {
-      const content = fs.readFileSync(file, 'utf-8')
+    files.map((file, index) => {
+      const content = filesystem.read(file, 'utf8')
 
       const percentage = Math.ceil((index * 100) / files.length)
 
@@ -50,8 +56,6 @@ export default {
       return [project, r.replace(process.cwd(), '.')]
     })
 
-    await new Promise(resolve => setTimeout(resolve, 5000))
-
     spinner.stop()
 
     if (resultsPretty.length) {
@@ -60,7 +64,8 @@ export default {
       })
     }
 
-    print.success(`Search completed: ${results.length} items founded`)
-    print.success(`Time spend: ${(Date.now() - startTime) / 1000} seconds`)
+    spinner.succeed(`Search completed`)
+    print.info(`Items found: ${results.length}`)
+    print.info(`Time spend: ${(Date.now() - startTime) / 1000} seconds`)
   }
 }
