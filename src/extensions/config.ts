@@ -1,19 +1,31 @@
-import { GluegunToolbox } from 'gluegun'
+import { GluegunToolbox, filesystem } from 'gluegun'
 import * as path from 'path'
 import * as glob from 'glob'
 
 export function createCatalog(catalogPath: string) {
   function findFiles(pattern: string) {
-    return glob.sync(`${catalogPath}/**/${pattern}.md`)
+    return glob.sync(filesystem.resolve(catalogPath, '**', pattern))
+  }
+
+  function findFilesConverted(pattern: string) {
+    return glob.sync(
+      filesystem.resolve(filesystem.cwd(), '.baka', '**', pattern)
+    )
   }
 
   function findProjects(pattern: string) {
-    return glob.sync(`${catalogPath}/${pattern}`)
+    return glob.sync(filesystem.resolve(catalogPath, pattern))
+  }
+
+  function findProjectsConverted(pattern: string) {
+    return glob.sync(filesystem.resolve(filesystem.cwd(), '.baka', pattern))
   }
 
   return {
     findFiles,
-    findProjects
+    findFilesConverted,
+    findProjects,
+    findProjectsConverted
   }
 }
 
