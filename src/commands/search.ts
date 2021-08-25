@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as glob from 'glob'
 import * as path from 'path'
 import { GluegunToolbox } from 'gluegun'
 
@@ -22,7 +21,6 @@ export default {
     const files = catalog.findFiles(`*`)
 
     const results: string[] = []
-    const searchBuffer = Buffer.from(name)
 
     files.forEach((file, index) => {
       const content = fs.readFileSync(file, 'utf-8')
