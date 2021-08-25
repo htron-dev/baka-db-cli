@@ -1,10 +1,10 @@
 import * as lodash from 'lodash'
-import { GluegunToolbox } from 'gluegun'
+import { GluegunCommand } from 'gluegun'
 
-export default {
+const command: GluegunCommand = {
   name: 'generate:index',
-  alias: ['s'],
-  run: async ({ parameters, print, catalog, filesystem }: GluegunToolbox) => {
+  description: 'Create catalog summary',
+  run: async ({ parameters, print, catalog, filesystem }) => {
     const spinner = print.spin('Start creating index')
 
     const summaryPath = filesystem.resolve(filesystem.cwd(), 'summary')
@@ -67,3 +67,5 @@ export default {
     spinner.succeed('Catalog summary created')
   }
 }
+
+export default command

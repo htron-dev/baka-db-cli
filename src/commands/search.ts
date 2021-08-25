@@ -1,17 +1,11 @@
 // import * as fs from 'fs'
 import * as path from 'path'
-import { GluegunToolbox } from 'gluegun'
+import { GluegunCommand } from 'gluegun'
 
-export default {
+const command: GluegunCommand = {
   name: 'search',
-  alias: ['s'],
-  run: async ({
-    parameters,
-    print,
-    catalog,
-    config,
-    filesystem
-  }: GluegunToolbox) => {
+  description: 'Search a item in catalog',
+  run: async ({ parameters, print, catalog, config, filesystem }) => {
     const name = parameters.first
 
     if (!name) {
@@ -69,3 +63,4 @@ export default {
     print.info(`Time spend: ${(Date.now() - startTime) / 1000} seconds`)
   }
 }
+export default command

@@ -2,11 +2,14 @@ import { GluegunCommand } from 'gluegun'
 
 const command: GluegunCommand = {
   name: 'baka',
+  description: 'Welcome command',
   run: async toolbox => {
     const { print } = toolbox
 
     print.info('Baka CLI')
+
+    print.printCommands(toolbox)
   }
 }
 
-module.exports = command
+export default command
