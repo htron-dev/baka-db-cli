@@ -1,11 +1,13 @@
 {
-  "name": "baka-db-cli",
+  "name": "@baka-db/cli",
   "version": "0.0.1",
   "description": "baka-db-cli CLI",
-  "private": true,
   "types": "build/types/types.d.ts",
   "bin": {
     "baka": "bin/baka"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json}",
