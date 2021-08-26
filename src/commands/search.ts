@@ -18,7 +18,7 @@ const command: GluegunCommand = {
 
     spinner.start()
 
-    const files = catalog.findFiles(`*`)
+    const files = catalog.findFiles(`*.md`)
 
     const results: string[] = []
 

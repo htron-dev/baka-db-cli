@@ -2,10 +2,11 @@
   "name": "@baka-db/cli",
   "version": "0.0.1",
   "description": "baka-db-cli CLI",
-  "types": "build/types/types.d.ts",
+  "types": "build/types/index.d.ts",
   "bin": {
     "baka": "bin/baka"
   },
+  "main": "build/index.js",
   "publishConfig": {
     "access": "public"
   },
