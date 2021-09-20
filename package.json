@@ -1,6 +1,6 @@
 {
   "name": "@baka-db/cli",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "baka-db-cli CLI",
   "types": "build/types/index.d.ts",
   "bin": {
