@@ -3,22 +3,14 @@ import { ToolboxWithCatalog } from '../../types'
 
 const command: GluegunCommand<ToolboxWithCatalog> = {
   name: 'json',
-  run: async ({
-    print,
-    parameters,
-    prompt,
-    config,
-    catalog,
-    filesystem,
-    markdown
-  }) => {
+  run: async ({ print, parameters, prompt, catalog, filesystem }) => {
     let pattern = parameters.first
 
     if (!pattern) {
       const result = await prompt.ask({
         type: 'input',
         name: 'pattern',
-        message: 'Project name or regex pattern:'
+        message: 'Project name or pattern:'
       })
 
       pattern = result.pattern
@@ -28,11 +20,13 @@ const command: GluegunCommand<ToolboxWithCatalog> = {
       return
     }
 
-    const projects = catalog.findProjects(pattern)
+    print.info(`search files...`)
+
+    const items = await catalog.findAll('*', pattern)
 
     if (!parameters.options.y) {
       const confirm = await prompt.confirm(
-        `${projects.length} projects found, wanna  proceed?`
+        `${items.length} items found, wanna  proceed?`
       )
 
       if (!confirm) {
@@ -40,50 +34,42 @@ const command: GluegunCommand<ToolboxWithCatalog> = {
       }
     }
 
-    const tempFolder = filesystem.resolve(filesystem.cwd(), '.baka')
+    const destinyFolder = filesystem.resolve(filesystem.cwd(), '.baka')
 
-    const spinner = print.spin('Start conversion...')
     const startTime = Date.now()
 
-    spinner.start()
+    print.info('removing .baka folder')
 
-    spinner.info('removing .baka folder')
+    await filesystem.removeAsync(destinyFolder)
 
-    await filesystem.removeAsync(tempFolder)
+    items.forEach((item, index) => {
+      const filename = filesystem.resolve(
+        destinyFolder,
+        item.folderName,
+        item.itemName.replace('.md', '.json')
+      )
 
-    projects.forEach((project, index) => {
-      const files = filesystem.list(project)
-      const projectName = project.split(filesystem.separator).pop()
-
-      files.map(f => {
-        const json = markdown.fileToObject(
-          filesystem.resolve(config.catalog.path, project, f)
-        )
-
-        filesystem.write(
-          filesystem.resolve(
-            tempFolder,
-            projectName,
-            f.replace('.md', '.json')
-          ),
-          json,
-          {
-            jsonIndent: 4
-          }
-        )
+      filesystem.write(filename, item.toObject(), {
+        jsonIndent: 4
       })
 
-      const percentage = Math.ceil((index * 100) / projects.length)
+      const percentage = Math.ceil((index * 100) / items.length)
 
-      spinner.text = `Current progress: ${percentage}%`
-
-      spinner.render()
+      print.info(`converted ${index + 1}/${items.length} | ${percentage}%`)
     })
 
-    spinner.stop()
+    print.table(
+      [
+        ['items converted', 'Time spend'],
+        [`${items.length}`, `${(Date.now() - startTime) / 1000}`]
+      ],
+      {
+        format: 'lean'
+      }
+    )
 
-    spinner.succeed('Projects converted')
-    spinner.succeed(`Time spend: ${(Date.now() - startTime) / 1000}`)
+    print.highlight('Items converted')
+    print.highlight(`Time spend: ${(Date.now() - startTime) / 1000}`)
   }
 }
 
